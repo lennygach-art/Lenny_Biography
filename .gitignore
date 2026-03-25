@@ -1,0 +1,10 @@
+# Ignore the Python virtual environment
+__pycache__/
+*.pyc
+
+# Ignore the generated movie list (it changes constantly)
+Movies/movies.json
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db

@@ -1,0 +1,80 @@
+/* 1. Global Styles */
+body {
+  background-color: #121212; /* Deep dark background */
+  color: #ffffff;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 20px;
+}
+
+/* 2. The Grid Container */
+#movie-grid {
+  display: grid;
+  /* This automatically creates columns that fit your screen */
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+/* 3. The Movie Card */
+.movie-card {
+  background-color: #1e1e1e;
+  border-radius: 8px;
+  padding: 15px;
+  border: 1px solid #333;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+/* 4. Hover Effects (Pro Touch) */
+.movie-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+  border-color: #e50914; /* Netflix Red accent */
+}
+
+/* 5. Typography inside the card */
+.movie-card h3 {
+  margin: 0 0 10px 0;
+  font-size: 1.1rem;
+  color: #e5e5e5;
+}
+
+.movie-card p {
+  margin: 5px 0;
+  font-size: 0.9rem;
+  color: #b3b3b3;
+}
+
+.movie-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  background-color: #333;
+  margin-top: 10px;
+}
+
+.search-container {
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+#movie-search {
+  width: 100%;
+  max-width: 500px;
+  padding: 12px 20px;
+  background-color: #2a2a2a;
+  border: 2px solid #444;
+  border-radius: 25px;
+  color: white;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+#movie-search:focus {
+  border-color: #e50914; /* Netflix Red focus */
+}

@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <!-- a reverse link to the master portal -->
+    <p><a href="/">Back to Master Portal</a></p>
+
+    <h1>My Movie Catalog</h1>
+    <div class="search-container">
+      <input
+        type="text"
+        id="movie-search"
+        placeholder="Search movies or TV shows..."
+      />
+    </div>
+
+    <div id="movie-grid" class="grid-container"></div>
+    <script>
+      let allMovies = []; // We'll store the full list here. That way we can filter it without asking the server again.
+
+      // 1. Fetch the data once
+      fetch("/Movies/movies.json")
+        .then((res) => res.json())
+        .then((data) => {
+          allMovies = data;
+          displayMovies(allMovies); // Show everything at the start
+        });
+
+      // 2. The "Painter" function. This takes a list of movies and puts them on the screen.
+      function displayMovies(moviesToDisplay) {
+        const grid = document.getElementById("movie-grid");
+        grid.innerHTML = ""; // Clear the grid before drawing. innerHTML is used for simplicity.
+
+        moviesToDisplay.forEach((movie) => {
+          const card = document.createElement("div");
+          card.className = "movie-card";
+
+          // 1. Set the look of the card.
+          card.innerHTML = `
+      <h3>${movie.display_name}</h3>
+      <p>Year/Season: ${movie.year_or_season}</p>
+      <span class="movie-badge">Type: ${movie.type}</span>
+    `;
+          // 2. When you click the card, we want to fetch the contents of that movie's folder and show it.
+          card.onclick = () => {
+            fetch(`/list-contents?path=${encodeURIComponent(movie.full_path)}`)
+              .then((res) => res.json())
+              .then((data) => {
+                // 1. Clear the screen
+                const grid = document.getElementById("movie-grid");
+                grid.innerHTML = `<h2>Contents of ${movie.display_name}</h2>`;
+
+                // 2. List each file
+                data.files.forEach((fileName) => {
+                  const fileItem = document.createElement("div");
+                  fileItem.className = "file-item"; // You can style this in CSS
+                  fileItem.innerText = "📄 " + fileName;
+                  grid.appendChild(fileItem);
+                });
+
+                // 3. Add a "Back" button
+                // Inside your file listing logic...
+                const backBtn = document.createElement("button");
+                backBtn.innerText = "Back to Results";
+                backBtn.onclick = () => {
+                  // This triggers the 'input' logic again to filter based on current search text
+                  const event = new Event("input");
+                  document.getElementById("movie-search").dispatchEvent(event);
+                };
+                grid.prepend(backBtn);
+              });
+          };
+
+          // 3. Put it on the screen
+          grid.appendChild(card);
+        });
+      }
+
+      // 3. The Search Listener
+      const searchInput = document.getElementById("movie-search");
+      searchInput.addEventListener("input", (e) => {
+        const term = e.target.value.toLowerCase();
+
+        // Filter the list based on the name
+        const filtered = allMovies.filter((movie) =>
+          movie.display_name.toLowerCase().includes(term),
+        );
+
+        displayMovies(filtered); // Redraw with only the matches!
+      });
+    </script>
+  </body>
+</html>
