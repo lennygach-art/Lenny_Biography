@@ -32,6 +32,7 @@
       // 2. The "Painter" function. This takes a list of movies and puts them on the screen.
       function displayMovies(moviesToDisplay) {
         const grid = document.getElementById("movie-grid");
+        grid.classList.remove("player-mode");
         grid.innerHTML = ""; // Clear the grid before drawing. innerHTML is used for simplicity.
 
         moviesToDisplay.forEach((movie) => {
@@ -58,6 +59,49 @@
                   const fileItem = document.createElement("div");
                   fileItem.className = "file-item"; // You can style this in CSS
                   fileItem.innerText = "📄 " + fileName;
+
+                  // Check if it's a video to add the icon class
+                  if (fileName.endsWith(".mp4") || fileName.endsWith(".mkv")) {
+                    fileItem.classList.add("video-file");
+                  }
+                  fileItem.innerText = fileName;
+
+                  // --- PASTE THE NEW PLAY LOGIC HERE ---
+                  fileItem.onclick = () => {
+                    // Only trigger if it's a video file
+                    if (
+                      fileName.endsWith(".mp4") ||
+                      fileName.endsWith(".mkv")
+                    ) {
+                      const videoUrl = `/stream-video?path=${encodeURIComponent(movie.full_path + "\\" + fileName)}`;
+                      const lowerName = fileName.toLowerCase();
+                      const videoType = lowerName.endsWith(".mp4")
+                        ? "video/mp4"
+                        : lowerName.endsWith(".mkv")
+                          ? "video/x-matroska"
+                          : "";
+
+                      // Swap the grid for the player
+                      const grid = document.getElementById("movie-grid");
+                      grid.classList.add("player-mode");
+                      grid.innerHTML = `
+                <div class="video-container">
+                    <button id="close-player" class="action-button">X</button>
+                    <video controls autoplay style="width:100%; margin-top:20px;">
+                        <source src="${videoUrl}" type="${videoType}">
+                        Your browser could not play this video directly.
+                    </video>
+                </div>
+            `;
+
+                      // Make the Close button bring back the movie grid
+                      document.getElementById("close-player").onclick = () => {
+                        displayMovies(allMovies);
+                      };
+                    }
+                  };
+                  // --------------------------------------
+
                   grid.appendChild(fileItem);
                 });
 

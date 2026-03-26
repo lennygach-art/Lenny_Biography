@@ -16,6 +16,10 @@ body {
   padding: 20px;
 }
 
+#movie-grid.player-mode {
+  display: block;
+}
+
 /* 3. The Movie Card */
 .movie-card {
   background-color: #1e1e1e;
@@ -77,4 +81,130 @@ body {
 
 #movie-search:focus {
   border-color: #e50914; /* Netflix Red focus */
+}
+
+/* 1. The standard look */
+a {
+  color: #00d4ff; /* That ghostly blue we liked */
+  text-decoration: none; /* Removes the ugly underline */
+  transition: 0.3s; /* Makes the color change feel smooth, not jerky */
+}
+
+/* 2. When the mouse is over it */
+a:hover {
+  color: #ffffff;
+  text-shadow: 0 0 10px #00d4ff; /* Adds a "glow" effect */
+}
+
+/* 3. The moment you click it down */
+a:active {
+  transform: scale(0.95); /* Makes it look like it's physically being pressed */
+}
+
+/* 4. After you have visited it (optional) 
+a:visited {
+  color: #800080; /* Usually people keep this the same as 'a' to stay "dark" */
+
+.catalog-link {
+  display: inline-block; /* Essential for padding to work correctly */
+  padding: 12px 24px;
+  border: 2px solid #00d4ff;
+  border-radius: 30px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+/* Paste this into your style.css */
+.nav-link {
+  display: inline-block;
+  padding: 10px 25px;
+  color: #00d4ff; /* Soul Blue */
+  text-decoration: none;
+  border: 1px solid #00d4ff;
+  border-radius: 50px; /* Makes it a pill shape */
+  background: transparent;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+  margin: 10px 0;
+}
+
+.nav-link:hover {
+  background: rgba(0, 212, 255, 0.1); /* Subtle fill */
+  box-shadow:
+    0 0 15px #00d4ff,
+    inset 0 0 5px #00d4ff; /* Inner and outer glow */
+  color: #fff;
+  transform: translateY(-2px); /* Lifts up slightly */
+}
+
+/* High-contrast action style */
+.action-button {
+  display: inline-block;
+  padding: 12px 20px;
+  background-color: #ff4500; /* Naruto Orange */
+  color: #000; /* Dark text for contrast */
+  text-decoration: none;
+  font-weight: bold;
+  border-radius: 4px;
+  box-shadow: 4px 4px 0px #551a00; /* Hard 90s style shadow */
+  transition: 0.2s;
+}
+
+.action-button:hover {
+  background-color: #ff6a00;
+  transform: translate(-2px, -2px); /* Moves toward the "light" */
+  box-shadow: 6px 6px 0px #551a00;
+}
+
+.action-button:active {
+  transform: translate(2px, 2px); /* Physical "click" feel */
+  box-shadow: 1px 1px 0px #551a00;
+}
+
+.button-group {
+  display: flex; /* Turns on the "Flexbox" engine */
+  gap: 20px; /* Sets a specific 20px gap between every item */
+  justify-content: center; /* Centers the buttons on the screen */
+  flex-wrap: wrap; /* If the screen is small, they will stack vertically */
+}
+
+.file-item {
+  padding: 10px;
+  margin: 5px 0;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.file-item:hover {
+  background: rgba(0, 212, 255, 0.2);
+  color: #00d4ff;
+}
+
+/* This adds a play icon only to video files using a 'data' attribute or simple logic */
+.video-file::before {
+  content: "▶️ ";
+  margin-right: 10px;
+}
+
+/* This makes the player container look like a professional cinema 16:9 box */
+.video-container {
+  width: 100%;
+  max-width: 900px; /* Limits the size so it doesn't look stretched on huge monitors */
+  margin: 20px auto; /* Centers the player */
+  background: #000;
+  border: 2px solid #333;
+  border-radius: 8px;
+  overflow: hidden;
+  grid-column: 1 / -1; /* Make the player span the full grid width */
+}
+
+/* This is the magic line that fixes the "tiny box" */
+.video-container video {
+  width: 100%;
+  height: auto;
+  display: block;
 }

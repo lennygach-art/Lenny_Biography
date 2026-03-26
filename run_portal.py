@@ -1,43 +1,46 @@
-from flask import Flask, request, send_from_directory, jsonify
-import os, subprocess, webbrowser
+from flask import Flask, request, send_from_directory, jsonify, send_file
+import mimetypes
+import os
+import subprocess
+import webbrowser
 
 app = Flask(__name__)
 PORT = 5000
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# 1. Route for the Master Portal (The landing page)
-@app.route('/')
+
+@app.route("/")
 def index():
-    return send_from_directory(BASE_DIR, 'index.html')
+    return send_from_directory(BASE_DIR, "index.html")
 
-# 2. Route for the Movie Catalog page
-@app.route('/movies-catalog')
+
+@app.route("/movies-catalog")
 def movies_page():
-    return send_from_directory(os.path.join(BASE_DIR, 'Movies'), 'index.html')
+    return send_from_directory(os.path.join(BASE_DIR, "Movies"), "index.html")
 
-# 3. Route to serve the JSON and CSS correctly
-@app.route('/Movies/<path:filename>')
+
+@app.route("/Movies/<path:filename>")
 def serve_movie_files(filename):
-    # This ensures that even if you are on the /movies-catalog page, 
-    # it can still find 'movies.json' inside the Movies folder.
-    return send_from_directory(os.path.join(BASE_DIR, 'Movies'), filename)
+    return send_from_directory(os.path.join(BASE_DIR, "Movies"), filename)
 
-@app.route('/style.css')
+
+@app.route("/style.css")
 def serve_css():
-    return send_from_directory(BASE_DIR, 'style.css')
+    return send_from_directory(BASE_DIR, "style.css")
 
-# 4. The "Bridge" for opening folders
-@app.route('/open-folder')
+
+@app.route("/open-folder")
 def open_folder():
-    folder_path = request.args.get('path')
+    folder_path = request.args.get("path")
     if folder_path:
-        subprocess.Popen(['explorer', folder_path])
+        subprocess.Popen(["explorer", folder_path])
         return "OK", 200
     return "Error", 400
 
-@app.route('/list-contents')
+
+@app.route("/list-contents")
 def list_contents():
-    folder_path = request.args.get('path')
+    folder_path = request.args.get("path")
     if not folder_path:
         return jsonify({"error": "Missing path"}), 400
 
@@ -50,8 +53,24 @@ def list_contents():
     except OSError as exc:
         return jsonify({"error": str(exc)}), 500
 
+
+@app.route("/stream-video")
+def stream_video():
+    video_path = request.args.get("path")
+
+    if not video_path or not os.path.exists(video_path):
+        print(f"Error: Video not found at {video_path}")
+        return "Video not found", 404
+
+    guessed_type, _ = mimetypes.guess_type(video_path)
+    return send_file(
+        video_path,
+        conditional=True,
+        mimetype=guessed_type or "application/octet-stream",
+    )
+
+
 if __name__ == "__main__":
-    # Run the scanner inside the Movies subfolder
     subprocess.run(["python", "Movies/scanner.py"])
     webbrowser.open(f"http://localhost:{PORT}")
-    app.run(port=PORT, debug=False)
+    app.run(host='0.0.0.0', port=PORT, debug=False)
