@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lenny Portal</title>
+  </head>
+  <body class="portal-page">
+    <main class="portal-shell">
+      <section class="portal-hero">
+        <p class="portal-kicker">Personal Media Gateway</p>
+        <h1>Lenny Master Portal</h1>
+        <p class="portal-intro">
+          A single place to browse your media catalog, launch personal spaces,
+          and keep future sections organized as the site grows.
+        </p>
+      </section>
+
+      <section class="portal-panel">
+        <div class="portal-panel-header">
+          <div>
+            <p class="section-label">Available Destinations</p>
+            <h2>Choose where to go next</h2>
+          </div>
+          <p class="section-copy">
+            Built to stay simple now, but structured to scale into a fuller
+            personal dashboard later.
+          </p>
+        </div>
+
+        <div class="portal-grid">
+          <article class="portal-card portal-card-featured">
+            <p class="portal-card-tag">Catalog</p>
+            <h3>Movie Library</h3>
+            <p>
+              Browse your scanned collection, search titles quickly, and stream
+              supported video files from one interface.
+            </p>
+            <a href="/movies-catalog" class="action-button">Open Movie Catalog</a>
+          </article>
+
+          <article class="portal-card">
+            <p class="portal-card-tag">Profile</p>
+            <h3>GitHub</h3>
+            <p>
+              Jump to your public developer profile and keep your work,
+              experiments, and repositories one click away.
+            </p>
+            <a href="https://github.com/lennygach-art" class="action-button">Visit GitHub</a>
+          </article>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

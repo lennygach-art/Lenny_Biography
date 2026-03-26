@@ -1,33 +1,61 @@
 const grid = document.getElementById("movie-grid");
 const searchInput = document.getElementById("movie-search");
+const catalogCount = document.getElementById("catalog-count");
 
 let allMovies = [];
 let currentMovie = null;
 
-// App startup: wire up events and load the movie list once.
 initializePage();
 
-// Initial page setup.
 async function initializePage() {
+  attachKeyboardShortcuts();
   attachSearchListener();
   await loadMovies();
 }
 
-// Search input: redraw the grid as the user types.
+function attachKeyboardShortcuts() {
+  document.addEventListener(
+    "keydown",
+    (event) => {
+      const activeVideo = document.getElementById("main-video");
+      if (!activeVideo) {
+        return;
+      }
+
+      if (event.code === "Space") {
+        event.preventDefault();
+        togglePlay();
+        return;
+      }
+
+      if (event.key === "ArrowRight") {
+        event.preventDefault();
+        activeVideo.currentTime += 10;
+        return;
+      }
+
+      if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        activeVideo.currentTime -= 10;
+      }
+    },
+    true,
+  );
+}
+
 function attachSearchListener() {
   searchInput.addEventListener("input", () => {
     displayMovies(getFilteredMovies(searchInput.value));
   });
 }
 
-// Data loading: fetch the scanned movie catalog from the server.
 async function loadMovies() {
-  const response = await fetch("/Movies/movies.json");
+  const response = await fetch("/api/catalog");
   allMovies = await response.json();
+  updateCatalogCount(allMovies.length);
   displayMovies(allMovies);
 }
 
-// Filtering: return only movies whose names match the search text.
 function getFilteredMovies(searchTerm) {
   const term = searchTerm.toLowerCase();
   return allMovies.filter((movie) =>
@@ -35,18 +63,20 @@ function getFilteredMovies(searchTerm) {
   );
 }
 
-// Main catalog view: show movie cards and reset any player-specific layout.
 function displayMovies(moviesToDisplay) {
   currentMovie = null;
   grid.classList.remove("player-mode");
   grid.innerHTML = "";
+  updateCatalogCount(
+    moviesToDisplay.length,
+    moviesToDisplay.length === allMovies.length ? "titles available" : "matching results",
+  );
 
   moviesToDisplay.forEach((movie) => {
     grid.appendChild(createMovieCard(movie));
   });
 }
 
-// Movie card UI: create one clickable card for the grid.
 function createMovieCard(movie) {
   const card = document.createElement("div");
   card.className = "movie-card";
@@ -64,7 +94,6 @@ function createMovieCard(movie) {
   return card;
 }
 
-// Folder data: ask the Flask route for the selected movie folder contents.
 async function fetchFolderContents(folderPath) {
   const response = await fetch(
     `/list-contents?path=${encodeURIComponent(folderPath)}`,
@@ -73,11 +102,11 @@ async function fetchFolderContents(folderPath) {
   return data.files || [];
 }
 
-// Folder view: replace the grid with the selected movie's file listing.
 function renderFolderContents(movie, files) {
   currentMovie = movie;
   grid.classList.remove("player-mode");
-  grid.innerHTML = `<h2>Contents of ${movie.display_name}</h2>`;
+  grid.innerHTML = `<h2 class="catalog-section-title">Contents of ${movie.display_name}</h2>`;
+  updateCatalogCount(files.length, "items in folder");
   grid.appendChild(createResultsBackButton());
 
   files.forEach((fileName) => {
@@ -85,10 +114,9 @@ function renderFolderContents(movie, files) {
   });
 }
 
-// Folder navigation: return from file listing back to the filtered results.
 function createResultsBackButton() {
   const backBtn = document.createElement("button");
-  backBtn.className = "action-button";
+  backBtn.className = "catalog-back-link";
   backBtn.innerText = "Back to Results";
   backBtn.onclick = () => {
     displayMovies(getFilteredMovies(searchInput.value));
@@ -96,7 +124,6 @@ function createResultsBackButton() {
   return backBtn;
 }
 
-// File item UI: create one row and attach video playback when relevant.
 function createFileItem(movie, fileName) {
   const fileItem = document.createElement("div");
   fileItem.className = "file-item";
@@ -112,21 +139,27 @@ function createFileItem(movie, fileName) {
   return fileItem;
 }
 
-// Player view: swap the listing for an embedded browser video player.
 function renderVideoPlayer(movie, fileName) {
   const videoUrl = `/stream-video?path=${encodeURIComponent(`${movie.full_path}\\${fileName}`)}`;
   const videoType = getVideoMimeType(fileName);
 
   grid.classList.add("player-mode");
+  updateCatalogCount(fileName, "now playing");
   grid.innerHTML = `
     <div class="video-container">
-      <button id="close-player" class="action-button">X</button>
-      <video controls autoplay style="width: 100%; margin-top: 20px;">
-        <source src="${videoUrl}" type="${videoType}">
-        Your browser could not play this video directly.
-      </video>
+      <div class="player-toolbar">
+        <button id="close-player" class="catalog-back-link">Back to Files</button>
+      </div>
+      <div class="video-wrapper">
+        <video id="main-video" controls autoplay>
+          <source src="${videoUrl}" type="${videoType}">
+          Your browser could not play this video directly.
+        </video>
+      </div>
     </div>
   `;
+
+  document.getElementById("main-video").onclick = togglePlay;
 
   document.getElementById("close-player").onclick = async () => {
     if (!currentMovie) {
@@ -139,13 +172,32 @@ function renderVideoPlayer(movie, fileName) {
   };
 }
 
-// File type check: decide whether a file should be treated as playable video.
+function updateCatalogCount(value, label = "titles available") {
+  if (!catalogCount) {
+    return;
+  }
+
+  catalogCount.textContent = `${value} ${label}`;
+}
+
+function togglePlay() {
+  const video = document.getElementById("main-video");
+  if (!video) {
+    return;
+  }
+
+  if (video.paused) {
+    video.play();
+  } else {
+    video.pause();
+  }
+}
+
 function isVideoFile(fileName) {
   const lowerName = fileName.toLowerCase();
   return lowerName.endsWith(".mp4") || lowerName.endsWith(".mkv");
 }
 
-// MIME helper: send the browser the most appropriate video type string.
 function getVideoMimeType(fileName) {
   const lowerName = fileName.toLowerCase();
 

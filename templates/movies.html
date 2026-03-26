@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Movie Catalog</title>
+  </head>
+  <body class="catalog-page">
+    <main class="catalog-shell">
+      <header class="catalog-header">
+        <a href="/" class="catalog-back-link">Back to Master Portal</a>
+
+        <div class="catalog-hero">
+          <p class="catalog-kicker">Personal Collection</p>
+          <h1>Movie Catalog</h1>
+          <p class="catalog-copy">
+            Browse your library, filter titles quickly, and stream supported
+            files in a calm, minimal interface.
+          </p>
+        </div>
+
+        <div class="search-container">
+          <input
+            type="text"
+            id="movie-search"
+            placeholder="Search movies or TV shows..."
+          />
+        </div>
+
+        <div class="catalog-meta">
+          <div class="catalog-meta-card">
+            <span class="catalog-meta-label">Library Status</span>
+            <strong id="catalog-count">Loading titles...</strong>
+          </div>
+          <div class="catalog-meta-card">
+            <span class="catalog-meta-label">Focus</span>
+            <strong>Dark, searchable, local-first</strong>
+          </div>
+        </div>
+      </header>
+
+      <section id="movie-grid" class="grid-container"></section>
+    </main>
+
+    <script src="{{ url_for('static', filename='js/movies_app.js') }}"></script>
+  </body>
+</html>

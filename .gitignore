@@ -3,7 +3,11 @@ __pycache__/
 *.pyc
 
 # Ignore the generated movie list (it changes constantly)
-Movies/movies.json
+data/Movies/movies.json
+
+# Ignore local app data
+backend/data/portal_db.db
+static/thumbnails/
 
 # Ignore OS-specific files
 .DS_Store
