@@ -1,3 +1,5 @@
+# Mystique Portal History
+```text
 Version 1:
 Core: Established the Flask-Python bridge to connect the D: drive to the web.
 Automation: Implemented scanner.py to auto-generate movies.json, eliminating manual entry.
@@ -19,3 +21,4 @@ app.js (moved functions from Movies/index.html to app.js for optimisation and fu
 
 version 1.10.01: minor changes
 version 1.10.02: Documentation
+```
