@@ -1,6 +1,21 @@
 # Lenny Biography Portal History
 
 ```text
+Version 2.0 "The Cinematic Engine":
+Core & Backend:
+- Upgraded the Python `scanner.py` to concurrently index multiple root libraries (Movies and Anime directories).
+- Rewrote the Jellyfin metadata harvester to operate completely offline, querying the raw `jellyfin.db` cache directly via SQLite.
+- Engineered cascading fuzzy-matching algorithms (stripping dates, "Season" tags, and Dub markers) to successfully salvage missing title correlations.
+- Automatically isolates and duplicates highest-quality Jellyfin backdrops, posters, and cast headshots into local `static/` directories.
+
+UI & Front-End Design:
+- Redesigned the entire portal with a premium Dark-Glassmorphic responsive CSS Grid.
+- Created a Master/Detail interface featuring cast rows, synopses, runtimes, ratings, and gorgeous UI fallbacks for unknown media.
+- Implemented mathematical 3D Parallax mouse-tracking effects for movie cards, simulating physical glossy reflections.
+- Built a lightweight native JS Canvas algorithm that reads the movie poster and dynamically theme-tints the glowing shadows of the entire page to match.
+- Introduced infinite keyframe "breathing" animations for gigantic cinematic background elements.
+- Utterly replaced default browser playback controls with a custom-engineered Video Player UX layer, fully optimized for Mobile breakpoints and Spacebar triggers!
+
 Version 1.2:
 Core:
 - Reorganized the project into a cleaner Flask-style structure with backend, templates, static, and data folders.

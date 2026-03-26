@@ -5,7 +5,10 @@ import re
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DATA_DIR = PROJECT_ROOT / "data" / "Movies"
 DATABASE_FILE = DATA_DIR / "movies.json"
-MOVIE_DIR = Path(r"D:\Shared_Bridge\Movies")
+MEDIA_DIRS = [
+    Path(r"D:\Shared_Bridge\Movies"),
+    Path(r"D:\Shared_Bridge\Anime")
+]
 
 
 def clean_movie_name(folder_name):
@@ -33,30 +36,32 @@ def clean_movie_name(folder_name):
 
 def scan_movies():
     movie_list = []
-    print(f"--- Starting Scan: {MOVIE_DIR} ---\n")
+    
+    for folder_path in MEDIA_DIRS:
+        print(f"--- Starting Scan: {folder_path} ---\n")
 
-    if not MOVIE_DIR.exists():
-        print(f" Error: Could not find path {MOVIE_DIR}")
-        return
-
-    for entry in MOVIE_DIR.iterdir():
-        if not entry.is_dir():
+        if not folder_path.exists():
+            print(f" Error: Could not find path {folder_path}")
             continue
 
-        title, year_or_season, media_type = clean_movie_name(entry.name)
-        if media_type == "Ignore":
-            print(f" Skipping: {entry.name}")
-            continue
+        for entry in folder_path.iterdir():
+            if not entry.is_dir():
+                continue
 
-        movie_data = {
-            "display_name": title,
-            "year_or_season": year_or_season,
-            "type": media_type,
-            "folder_name": entry.name,
-            "full_path": str(entry),
-        }
-        movie_list.append(movie_data)
-        print(f" Found {media_type}: {title} ({year_or_season})")
+            title, year_or_season, media_type = clean_movie_name(entry.name)
+            if media_type == "Ignore":
+                print(f" Skipping: {entry.name}")
+                continue
+
+            movie_data = {
+                "display_name": title,
+                "year_or_season": year_or_season,
+                "type": media_type,
+                "folder_name": entry.name,
+                "full_path": str(entry),
+            }
+            movie_list.append(movie_data)
+            print(f" Found {media_type}: {title} ({year_or_season})")
 
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     with DATABASE_FILE.open("w", encoding="utf-8") as file:
