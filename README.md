@@ -1,6 +1,13 @@
 # Lenny Biography Portal History
 
 ```text
+Version 2.5 "The Cloud Independence Update":
+Core & Backend:
+- Completely severed the application's reliance on Jellyfin. The engine is now 100% standalone!
+- Integrated a live connection to The Movie Database (TMDB) using secure networking tools. This allows the portal to automatically fetch the latest movie details, ratings, and descriptions directly from the web in real-time, while keeping your private API keys safe and hidden.
+- Built a hyper-efficient pipeline that autonomously downloads pure, uncompressed high-resolution Posters, Backdrops, and Actor Headshots natively via the internet. This should fix most broken thumbnails, remaining patches will be fixed in future updates.
+- Removed over 160 lines of deprecated local-SQLite parsing and centralized the entire data flow into a cloud-first `portal_db.db` initialization sequence.
+
 Version 2.0 "The Cinematic Engine":
 Core & Backend:
 - Upgraded the Python `scanner.py` to concurrently index multiple root libraries (Movies and Anime directories).

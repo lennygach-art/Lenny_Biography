@@ -1,6 +1,12 @@
 # Ignore the Python virtual environment
+.venv/
 __pycache__/
 *.pyc
+
+# Ignore environment variables and API keys
+.env
+backend/.env
+**/.env
 
 # Ignore the generated movie list (it changes constantly)
 data/Movies/movies.json
@@ -8,6 +14,10 @@ data/Movies/movies.json
 # Ignore local app data
 backend/data/portal_db.db
 static/thumbnails/
+static/cast/
+
+# Ignore IDE specific settings
+.vscode/
 
 # Ignore OS-specific files
 .DS_Store
